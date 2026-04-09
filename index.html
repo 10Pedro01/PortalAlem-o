@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Portal Mirella Bays</title>
+    <style>
+        /* Mantendo o estilo elegante e profissional */
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            background: linear-gradient(135deg, #2d3436 0%, #000000 100%); 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0; 
+        }
+        .login-card { 
+            background: white; 
+            padding: 40px; 
+            border-radius: 20px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5); 
+            width: 100%; 
+            max-width: 380px; 
+            text-align: center; 
+        }
+        .login-card h2 { 
+            color: #2d3436; 
+            margin-bottom: 10px; 
+        }
+        .login-card p {
+            color: #636e72;
+            font-size: 0.9em;
+            margin-bottom: 25px;
+        }
+        .linha-destaque {
+            height: 4px;
+            width: 50px;
+            background: #d63031;
+            margin: 0 auto 20px auto;
+            border-radius: 2px;
+        }
+        .form-group { margin-bottom: 20px; text-align: left; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #2d3436; }
+        input { 
+            width: 100%; 
+            padding: 14px; 
+            border: 1px solid #dfe6e9; 
+            border-radius: 10px; 
+            box-sizing: border-box; 
+            outline: none; 
+            font-size: 1em;
+            background-color: #f9f9f9;
+        }
+        input:focus { border-color: #d63031; background-color: #fff; }
+        
+        .btn-entrar { 
+            width: 100%; 
+            background: #d63031; 
+            color: white; 
+            border: none; 
+            padding: 16px; 
+            border-radius: 10px; 
+            font-size: 1.1em; 
+            font-weight: bold; 
+            cursor: pointer; 
+            transition: 0.3s; 
+            margin-top: 10px;
+        }
+        .btn-entrar:hover { background: #b32d2e; transform: translateY(-2px); }
+        
+        #mensagemErro { 
+            margin-top: 15px; 
+            color: #d63031; 
+            font-weight: bold; 
+            display: none; 
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-card">
+        <h2>Willkommen!</h2>
+        <div class="linha-destaque"></div>
+        <p>Acesse seu portal de estudos de Alemão</p>
+
+        <div class="form-group">
+            <label>E-mail:</label>
+            <input type="email" id="emailLogin" placeholder="seu@email.com">
+        </div>
+        <div class="form-group">
+            <label>Senha:</label>
+            <input type="password" id="senhaLogin" placeholder="••••••••">
+        </div>
+
+        <button class="btn-entrar" onclick="fazerLogin()">Entrar no Sistema</button>
+        <p id="mensagemErro">⚠️ E-mail ou senha incorretos.</p>
+    </div>
+
+    <script>
+        // A sua URL mágica que conecta tudo
+        const urlScript = "https://script.google.com/macros/s/AKfycby_b4ngv264zfhBp_XY4wPcVSsXSF0Q3D4Wft8IY0VCuiEKoFsNw8MDaMOYdW1ymfO0/exec";
+
+        async function fazerLogin() {
+            const email = document.getElementById('emailLogin').value;
+            const senha = document.getElementById('senhaLogin').value;
+            const erroMsg = document.getElementById('mensagemErro');
+
+            if (!email || !senha) {
+                alert("Por favor, preencha todos os campos.");
+                return;
+            }
+
+            try {
+                // Chamada para a função doGet que você adicionou no Apps Script
+                const response = await fetch(`${urlScript}?email=${email}&senha=${senha}&acao=LOGIN`);
+                const resultado = await response.json();
+
+                if (resultado.autorizado) {
+                    // Guarda o e-mail para o portal saber quem está logado
+                    localStorage.setItem("alunoLogado", email);
+                    // Vai para a página do portal
+                    window.location.href = "portal.html";
+                } else {
+                    erroMsg.style.display = "block";
+                }
+            } catch (err) {
+                alert("Erro ao conectar. Verifique se o Script está publicado como 'Qualquer pessoa'.");
+                console.error(err);
+            }
+        }
+    </script>
+</body>
+</html>
