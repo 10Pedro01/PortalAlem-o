@@ -5,32 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel Admin | Mirella Bays</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background-color: #f4f7f6; margin: 0; padding: 20px; }
-        .container { max-width: 900px; margin: auto; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f4f7f6; margin: 0; padding: 20px; color: #2d3436; }
+        .container { max-width: 1000px; margin: auto; }
         .card { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); margin-bottom: 25px; }
-        h2, h3 { color: #2d3436; border-bottom: 2px solid #d63031; padding-bottom: 10px; }
+        h2, h3, h4 { margin-top: 0; color: #2d3436; border-bottom: 2px solid #d63031; padding-bottom: 10px; }
         
         .grid-form { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
         .full-width { grid-column: span 2; }
         
-        label { display: block; margin-bottom: 5px; font-weight: bold; color: #636e72; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #636e72; font-size: 0.9em; }
         input, select, textarea { 
-            width: 100%; padding: 12px; border: 1px solid #dfe6e9; border-radius: 8px; box-sizing: border-box; 
+            width: 100%; padding: 12px; border: 1px solid #dfe6e9; border-radius: 8px; box-sizing: border-box; font-size: 1em;
         }
         
         button { 
             background: #d63031; color: white; border: none; padding: 12px 20px; 
             border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s;
         }
-        button:hover { background: #b32d2e; }
+        button:hover { background: #b32d2e; transform: translateY(-1px); }
         .btn-refresh { background: #2d3436; margin-bottom: 15px; }
 
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; background: white; }
         th, td { text-align: left; padding: 12px; border-bottom: 1px solid #eee; }
-        th { background-color: #f9f9f9; color: #636e72; }
-        .nivel-tag { 
-            background: #ffeaa7; color: #d35400; padding: 4px 8px; border-radius: 4px; font-size: 0.85em; font-weight: bold;
-        }
+        th { background-color: #f9f9f9; color: #636e72; font-size: 0.9em; }
+        .status-badge { background: #e1f5fe; color: #0288d1; padding: 4px 8px; border-radius: 4px; font-size: 0.8em; font-weight: bold; }
+        .nivel-tag { background: #ffeaa7; color: #d35400; padding: 4px 8px; border-radius: 4px; font-size: 0.8em; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -38,49 +37,41 @@
 <div class="container">
     <div class="card">
         <h2>Painel da Professora Mirella</h2>
-        <p>Gerencie alunos e publique materiais no mural.</p>
+        <p>Controle de alunos, agendamentos e materiais.</p>
     </div>
 
     <div class="card">
-        <h3>➕ Cadastrar Novo Aluno</h3>
+        <h3>📅 Agenda de Aulas</h3>
         <div class="grid-form">
             <div>
                 <label>Nome do Aluno:</label>
-                <input type="text" id="nomeAluno" placeholder="Ex: Hans Müller">
+                <input type="text" id="agendAluno" placeholder="Ex: Hans Müller">
             </div>
             <div>
-                <label>E-mail (Login):</label>
-                <input type="email" id="emailAluno" placeholder="aluno@email.com">
+                <label>Data da Aula:</label>
+                <input type="date" id="agendData">
             </div>
             <div>
-                <label>Senha Provisória:</label>
-                <input type="text" id="senhaAluno" placeholder="Ex: Alemão2024">
+                <label>Horário:</label>
+                <input type="time" id="agendHora">
             </div>
-            <div>
-                <label>Nível Atual:</label>
-                <select id="nivelAluno">
-                    <option value="A1">A1 - Iniciante</option>
-                    <option value="A2">A2 - Básico</option>
-                    <option value="B1">B1 - Intermediário</option>
-                    <option value="B2">B2 - Avançado</option>
-                </select>
+            <div style="display: flex; align-items: flex-end;">
+                <button style="width: 100%;" onclick="agendarAula()">Agendar Aula agora</button>
             </div>
-            <button class="full-width" onclick="cadastrarAluno()">Salvar Aluno na Planilha</button>
         </div>
-    </div>
 
-    <div class="card">
-        <h3>👥 Alunos Matriculados</h3>
-        <button class="btn-refresh" onclick="carregarAlunos()">🔄 Atualizar Lista</button>
+        <h4 style="margin-top: 30px; border-bottom: 1px solid #eee;">Próximas Aulas Marcadas</h4>
+        <button class="btn-refresh" onclick="carregarAgenda()">🔄 Atualizar Agenda</button>
         <table>
             <thead>
                 <tr>
-                    <th>Nome</th>
-                    <th>E-mail</th>
-                    <th>Nível</th>
+                    <th>Aluno</th>
+                    <th>Data</th>
+                    <th>Hora</th>
+                    <th>Status</th>
                 </tr>
             </thead>
-            <tbody id="tabelaAlunos">
+            <tbody id="tabelaAgenda">
                 </tbody>
         </table>
     </div>
@@ -90,57 +81,106 @@
         <div class="grid-form">
             <div class="full-width">
                 <label>E-mail do Aluno (Destinatário):</label>
-                <input type="email" id="postEmail" placeholder="Copie o e-mail da lista acima">
+                <input type="email" id="postEmail" placeholder="Copie o e-mail da lista de alunos abaixo">
             </div>
             <div>
-                <label>Título do Conteúdo:</label>
-                <input type="text" id="postTitulo" placeholder="Ex: Gramática: Verbos Modais">
+                <label>Título:</label>
+                <input type="text" id="postTitulo" placeholder="Ex: Exercícios de Pronúncia">
             </div>
             <div>
-                <label>Nível do Material:</label>
+                <label>Nível:</label>
                 <input type="text" id="postNivel" placeholder="Ex: A1">
             </div>
             <div class="full-width">
-                <label>Link do Material (Google Drive/PDF):</label>
-                <input type="text" id="postLink" placeholder="https://drive.google.com/...">
+                <label>Link (Google Drive/PDF):</label>
+                <input type="text" id="postLink" placeholder="https://...">
             </div>
             <div class="full-width">
-                <label>Descrição/Instruções:</label>
-                <textarea id="postDesc" rows="3"></textarea>
+                <label>Instruções:</label>
+                <textarea id="postDesc" rows="2"></textarea>
             </div>
-            <button class="full-width" onclick="postarConteudo()">Publicar no Mural do Aluno</button>
+            <button class="full-width" onclick="postarConteudo()">Enviar Material ao Aluno</button>
         </div>
+    </div>
+
+    <div class="card">
+        <h3>👥 Gestão de Alunos</h3>
+        <div class="grid-form" style="margin-bottom: 20px;">
+            <input type="text" id="nomeAluno" placeholder="Nome Completo">
+            <input type="email" id="emailAluno" placeholder="email@aluno.com">
+            <input type="text" id="senhaAluno" placeholder="Senha provisória">
+            <select id="nivelAluno">
+                <option value="A1">A1</option>
+                <option value="A2">A2</option>
+                <option value="B1">B1</option>
+                <option value="B2">B2</option>
+            </select>
+            <button class="full-width" onclick="cadastrarAluno()">Cadastrar Novo Aluno</button>
+        </div>
+        
+        <button class="btn-refresh" onclick="carregarAlunos()">🔄 Atualizar Lista de Alunos</button>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>E-mail (Login)</th>
+                    <th>Nível</th>
+                </tr>
+            </thead>
+            <tbody id="tabelaAlunos">
+                </tbody>
+        </table>
     </div>
 </div>
 
 <script>
-    // COLOQUE AQUI A SUA URL DO APPS SCRIPT
+    // IMPORTANTE: Substitua pela sua URL final do Apps Script
     const urlScript = "SUA_URL_DO_SCRIPT_AQUI";
 
-    // FUNÇÃO: BUSCAR ALUNOS DA PLANILHA
+    // --- FUNÇÕES DE CARREGAMENTO (GET) ---
+
     async function carregarAlunos() {
         const tabela = document.getElementById('tabelaAlunos');
-        tabela.innerHTML = "<tr><td colspan='3'>Carregando...</td></tr>";
-        
+        tabela.innerHTML = "<tr><td colspan='3'>Carregando alunos...</td></tr>";
         try {
             const response = await fetch(`${urlScript}?acao=LISTAR_ALUNOS`);
             const alunos = await response.json();
             tabela.innerHTML = ""; 
-            
             alunos.forEach(aluno => {
-                tabela.innerHTML += `
-                    <tr>
-                        <td>${aluno.nome}</td>
-                        <td>${aluno.email}</td>
-                        <td><span class="nivel-tag">${aluno.nivel}</span></td>
-                    </tr>`;
+                tabela.innerHTML += `<tr><td>${aluno.nome}</td><td>${aluno.email}</td><td><span class="nivel-tag">${aluno.nivel}</span></td></tr>`;
             });
-        } catch (err) {
-            tabela.innerHTML = "<tr><td colspan='3'>Erro ao carregar dados.</td></tr>";
-        }
+        } catch (err) { tabela.innerHTML = "<tr><td colspan='3'>Erro ao carregar lista.</td></tr>"; }
     }
 
-    // FUNÇÃO: CADASTRAR ALUNO
+    async function carregarAgenda() {
+        const tabela = document.getElementById('tabelaAgenda');
+        tabela.innerHTML = "<tr><td colspan='4'>Carregando agenda...</td></tr>";
+        try {
+            const response = await fetch(`${urlScript}?acao=LISTAR_AGENDA`);
+            const aulas = await response.json();
+            tabela.innerHTML = ""; 
+            aulas.forEach(aula => {
+                tabela.innerHTML += `<tr><td>${aula.aluno}</td><td>${aula.data}</td><td>${aula.hora}</td><td><span class="status-badge">${aula.status}</span></td></tr>`;
+            });
+        } catch (err) { tabela.innerHTML = "<tr><td colspan='4'>Erro ao carregar agenda.</td></tr>"; }
+    }
+
+    // --- FUNÇÕES DE ENVIO (POST) ---
+
+    async function agendarAula() {
+        const dados = {
+            tipo: "AGENDAMENTO",
+            aluno: document.getElementById('agendAluno').value,
+            data: document.getElementById('agendData').value,
+            hora: document.getElementById('agendHora').value
+        };
+        if(!dados.aluno || !dados.data) return alert("Preencha o nome e a data!");
+        
+        const response = await fetch(urlScript, { method: 'POST', body: JSON.stringify(dados) });
+        alert(await response.text());
+        carregarAgenda();
+    }
+
     async function cadastrarAluno() {
         const dados = {
             tipo: "CADASTRO_ALUNO",
@@ -149,14 +189,11 @@
             senha: document.getElementById('senhaAluno').value,
             nivel: document.getElementById('nivelAluno').value
         };
-
         const response = await fetch(urlScript, { method: 'POST', body: JSON.stringify(dados) });
-        const texto = await response.text();
-        alert(texto);
-        carregarAlunos(); // Atualiza a lista automaticamente
+        alert(await response.text());
+        carregarAlunos();
     }
 
-    // FUNÇÃO: POSTAR NO MURAL
     async function postarConteudo() {
         const dados = {
             tipo: "POSTAR_CONTEUDO",
@@ -166,14 +203,15 @@
             link: document.getElementById('postLink').value,
             nivel: document.getElementById('postNivel').value
         };
-
         const response = await fetch(urlScript, { method: 'POST', body: JSON.stringify(dados) });
-        const texto = await response.text();
-        alert(texto);
+        alert(await response.text());
     }
 
-    // Carregar a lista assim que abrir a página
-    window.onload = carregarAlunos;
+    // Inicialização
+    window.onload = () => {
+        carregarAlunos();
+        carregarAgenda();
+    };
 </script>
 
 </body>
