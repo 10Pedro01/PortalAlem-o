@@ -99,7 +99,7 @@
     </div>
 
     <script>
-        // A sua URL mágica que conecta tudo
+        // URL 
         const urlScript = "https://script.google.com/macros/s/AKfycby_b4ngv264zfhBp_XY4wPcVSsXSF0Q3D4Wft8IY0VCuiEKoFsNw8MDaMOYdW1ymfO0/exec";
 
         async function fazerLogin() {
@@ -113,7 +113,7 @@
             }
 
             try {
-                // Chamada para a função doGet que você adicionou no Apps Script
+                // Chamada para a função doGet
                 const response = await fetch(`${urlScript}?email=${email}&senha=${senha}&acao=LOGIN`);
                 const resultado = await response.json();
 
