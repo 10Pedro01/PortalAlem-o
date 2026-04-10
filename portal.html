@@ -11,7 +11,7 @@
         .header-aluno { background-color: #2d3436; color: white; padding: 40px 20px; text-align: center; border-bottom: 5px solid #d63031; }
         .welcome-box { max-width: 800px; margin: auto; display: flex; justify-content: space-between; align-items: center; }
         
-        /* Badge de Nível (O destaque que você pediu) */
+        /* Badge de Nível */
         .badge-nivel { background: #d63031; color: white; padding: 15px 25px; border-radius: 12px; font-size: 2em; font-weight: bold; box-shadow: 0 4px 15px rgba(214, 48, 49, 0.4); border: 2px solid #fab1a0; }
         
         .container { max-width: 900px; margin: 30px auto; padding: 0 20px; }
@@ -50,10 +50,10 @@
     </div>
 
     <script>
-        // Use a mesma URL que você usou no admin.html
+        // URL
         const urlScript = "https://script.google.com/macros/s/AKfycby_b4ngv264zfhBp_XY4wPcVSsXSF0Q3D4Wft8IY0VCuiEKoFsNw8MDaMOYdW1ymfO0/exec";
         
-// AGORA É REAL: Pegamos o e-mail que foi salvo no momento do login
+// EMAIL
 const emailLogado = localStorage.getItem("alunoLogado");
 
 // Segurança: Se alguém tentar entrar no portal sem logar, volta para o login
@@ -75,7 +75,7 @@ if (!emailLogado) {
                 document.getElementById('nomeApresentacao').innerText = "Hallo, " + dados.nome + "!";
                 document.getElementById('nivelDisplay').innerText = dados.nivel;
 
-                // Agora vamos renderizar os materiais que ela postou (Simulado por enquanto)
+                // Renderizar
                 renderizarMateriais(dados.materiais);
 
             } catch (err) {
